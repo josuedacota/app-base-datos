@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>COOVALLUNA</display-name>
+
+    <!-- Auth -->
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/api/auth/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Agencias -->
+    <servlet>
+        <servlet-name>AgenciaServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.AgenciaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AgenciaServlet</servlet-name>
+        <url-pattern>/api/agencias/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Empleados -->
+    <servlet>
+        <servlet-name>EmpleadoServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.EmpleadoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EmpleadoServlet</servlet-name>
+        <url-pattern>/api/empleados/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Asociados -->
+    <servlet>
+        <servlet-name>AsociadoServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.AsociadoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AsociadoServlet</servlet-name>
+        <url-pattern>/api/asociados/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Cuentas -->
+    <servlet>
+        <servlet-name>CuentaServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.CuentaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CuentaServlet</servlet-name>
+        <url-pattern>/api/cuentas/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Créditos -->
+    <servlet>
+        <servlet-name>CreditoServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.CreditoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreditoServlet</servlet-name>
+        <url-pattern>/api/creditos/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Usuarios -->
+    <servlet>
+        <servlet-name>UsuarioServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.UsuarioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsuarioServlet</servlet-name>
+        <url-pattern>/api/usuarios/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Reportes -->
+    <servlet>
+        <servlet-name>ReporteServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.ReporteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReporteServlet</servlet-name>
+        <url-pattern>/api/reportes/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Bitácora -->
+    <servlet>
+        <servlet-name>BitacoraServlet</servlet-name>
+        <servlet-class>com.coovalluna.servlet.BitacoraServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BitacoraServlet</servlet-name>
+        <url-pattern>/api/bitacora/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
