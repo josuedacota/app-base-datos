@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COOVALLUNA — Asesor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="app-shell">
+
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">🌿</div>
+            <div class="brand-text"><strong>COOVALLUNA</strong><small>Panel Asesor</small></div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Principal</div>
+            <button class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')"><span class="nav-icon">🏠</span> Inicio</button>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Operaciones</div>
+            <button class="nav-item" id="nav-asociados" onclick="showSection('asociados')"><span class="nav-icon">🤝</span> Asociados</button>
+            <button class="nav-item" id="nav-cuentas" onclick="showSection('cuentas')"><span class="nav-icon">💳</span> Cuentas de ahorro</button>
+            <button class="nav-item" id="nav-creditos" onclick="showSection('creditos')"><span class="nav-icon">📄</span> Créditos</button>
+            <button class="nav-item" id="nav-pagos" onclick="showSection('pagos')"><span class="nav-icon">💵</span> Pagos de cuotas</button>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-section-label">Agencia</div>
+            <button class="nav-item" id="nav-reportes" onclick="showSection('reportes')"><span class="nav-icon">📊</span> Reportes</button>
+        </div>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-footer">
+            <div class="user-card">
+                <div class="user-avatar" data-avatar>A</div>
+                <div class="user-info"><strong data-username>asesor</strong><small data-rol>ASESOR</small></div>
+                <button class="btn-logout" onclick="doLogout()" title="Cerrar sesión">⏏</button>
+            </div>
+        </div>
+    </aside>
+
+
+    <div class="main-area">
+        <header class="topbar">
+            <span class="topbar-title" id="topbarTitle">Inicio</span>
+            <div class="topbar-right">
+                <div class="topbar-user">
+                    <div class="topbar-avatar" data-avatar>A</div>
+                    <span data-username>asesor</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+
+
+            <section id="sec-dashboard">
+                <div class="welcome-banner">
+                    <div>
+                        <h2>¡Bienvenido, <span data-username>Asesor</span>!</h2>
+                        <p>Panel de operaciones — <span id="agenciaNombre">Tu agencia</span></p>
+                    </div>
+                    <div class="welcome-banner-icon">💼</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-header"><div class="stat-icon verde">🤝</div></div><div class="stat-value" id="dAsociados">—</div><div class="stat-label">Asociados atendidos</div></div>
+                    <div class="stat-card"><div class="stat-header"><div class="stat-icon oro">💳</div></div><div class="stat-value" id="dCuentas">—</div><div class="stat-label">Cuentas activas</div></div>
+                    <div class="stat-card"><div class="stat-header"><div class="stat-icon azul">📄</div></div><div class="stat-value" id="dCreditos">—</div><div class="stat-label">Créditos radicados</div></div>
+                    <div class="stat-card"><div class="stat-header"><div class="stat-icon rojo">⚠</div></div><div class="stat-value" id="dMora">—</div><div class="stat-label">En mora</div></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Accesos rápidos</span></div>
+                    <div class="card-body" style="display:flex;flex-wrap:wrap;gap:.7rem">
+                        <button class="btn btn-verde" onclick="showSection('asociados');abrirModalAsociado()">+ Registrar asociado</button>
+                        <button class="btn btn-outline" onclick="showSection('cuentas');abrirModalCuenta()">+ Abrir cuenta</button>
+                        <button class="btn btn-outline" onclick="showSection('creditos');abrirModalCredito()">+ Radicar crédito</button>
+                        <button class="btn btn-outline" onclick="showSection('pagos')">💵 Registrar pago</button>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="sec-asociados" class="hidden">
+                <div class="page-header">
+                    <div class="page-header-left"><h1>Asociados</h1><p>Registro y consulta de asociados</p></div>
+                    <div class="page-header-right">
+                        <button class="btn btn-verde" onclick="abrirModalAsociado()">+ Nuevo asociado</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="filter-bar">
+                        <div class="form-field" style="flex:2"><label>Buscar por nombre o cédula</label>
+                            <input type="text" id="buscarAso2" placeholder="Nombre o cédula…" oninput="filtrarAso2()">
+                        </div>
+                        <div class="form-field"><label>Estado</label>
+                            <select id="filtroAso2Estado" onchange="cargarAso2()">
+                                <option value="">Todos</option><option value="activo">Activo</option>
+                                <option value="suspendido">Suspendido</option><option value="retirado">Retirado</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-verde" onclick="cargarAso2()">🔍</button>
+                    </div>
+                    <div id="tablaAso2"></div>
+                </div>
+            </section>
+
+
+            <section id="sec-cuentas" class="hidden">
+                <div class="page-header">
+                    <div class="page-header-left"><h1>Cuentas de ahorro</h1><p>Apertura y movimientos</p></div>
+                    <div class="page-header-right">
+                        <button class="btn btn-verde" onclick="abrirModalCuenta()">+ Abrir cuenta</button>
+                    </div>
+                </div>
+                <div class="card mb-2">
+                    <div class="filter-bar">
+                        <div class="form-field" style="flex:2"><label>Cédula del asociado</label>
+                            <input type="text" id="cuentaAsoCed" placeholder="Ingresa la cédula y presiona buscar">
+                        </div>
+                        <button class="btn btn-verde" onclick="cargarCuentasDeAsociado()">🔍 Buscar</button>
+                    </div>
+                    <div id="tablaCuentas"></div>
+                </div>
+            </section>
+
+
+            <section id="sec-creditos" class="hidden">
+                <div class="page-header">
+                    <div class="page-header-left"><h1>Créditos</h1><p>Radicación y seguimiento</p></div>
+                    <div class="page-header-right">
+                        <button class="btn btn-verde" onclick="abrirModalCredito()">+ Radicar crédito</button>
+                    </div>
+                </div>
+                <div class="card mb-2">
+                    <div class="filter-bar">
+                        <div class="form-field" style="flex:2"><label>Cédula del asociado</label>
+                            <input type="text" id="creditoAsoCed" placeholder="Ingresa la cédula">
+                        </div>
+                        <button class="btn btn-verde" onclick="cargarCreditosDeAsociado()">🔍 Buscar</button>
+                    </div>
+                    <div id="tablaCreditos"></div>
+                </div>
+            </section>
+
+
+            <section id="sec-pagos" class="hidden">
+                <div class="page-header">
+                    <div class="page-header-left"><h1>Pagos de cuotas</h1><p>Registrar y consultar pagos</p></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Registrar pago</span></div>
+                        <div class="card-body">
+                            <div class="form-field mb-2"><label>Número de radicado</label><input type="text" id="pagoRadicado" placeholder="Ej: CR-001"></div>
+                            <div class="form-field mb-2"><label>Número de cuota</label><input type="number" id="pagoCuota" placeholder="Ej: 3" min="1"></div>
+                            <div class="form-field mb-2"><label>Valor pagado</label><input type="number" id="pagoValor" placeholder="Ej: 250000"></div>
+                            <div class="form-field mb-2"><label>Fecha de pago</label><input type="date" id="pagoFecha"></div>
+                            <div class="form-field mb-2"><label>Estado del pago</label>
+                                <select id="pagoEstado"><option value="a_tiempo">A tiempo</option><option value="pagado_con_mora">Con mora</option></select>
+                            </div>
+                            <button class="btn btn-verde" onclick="registrarPago()">💵 Registrar pago</button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><span class="card-title">Historial de pagos de un crédito</span></div>
+                        <div class="card-body">
+                            <div style="display:flex;gap:.7rem;margin-bottom:1rem">
+                                <input type="text" id="buscarHistPagos" placeholder="Número de radicado…" style="flex:1;padding:.6rem .8rem;border:1.5px solid var(--gris-300);border-radius:var(--radius);font-size:.88rem">
+                                <button class="btn btn-outline" onclick="cargarHistPagos()">🔍</button>
+                            </div>
+                            <div id="tablaHistPagos"><p class="text-muted" style="font-size:.85rem">Ingresa un número de radicado para ver el historial.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="sec-reportes" class="hidden">
+                <div class="page-header">
+                    <div class="page-header-left"><h1>Reportes de agencia</h1><p>Consultas operativas de tu agencia</p></div>
+                </div>
+                <div class="report-selector" style="grid-template-columns:repeat(3,1fr)">
+                    <div class="report-card selected" onclick="seleccionarReporteAsesor(1,this)"><div class="rc-num">R1</div><div class="rc-name">Asociados por estado</div></div>
+                    <div class="report-card" onclick="seleccionarReporteAsesor(4,this)"><div class="rc-num">R4</div><div class="rc-name">Asociados en mora</div></div>
+                    <div class="report-card" onclick="seleccionarReporteAsesor(2,this)"><div class="rc-num">R2</div><div class="rc-name">Extracto de cuenta</div></div>
+                </div>
+                <div class="card mb-2">
+                    <div class="filter-bar" id="filtrosAR1">
+                        <div class="form-field"><label>Estado</label><select id="ar1estado"><option value="">Todos</option><option value="activo">Activo</option><option value="suspendido">Suspendido</option></select></div>
+                        <button class="btn btn-verde" onclick="ejecutarReporteAsesor()">🔍 Generar</button>
+                    </div>
+                    <div class="filter-bar hidden" id="filtrosAR4">
+                        <button class="btn btn-verde" onclick="ejecutarReporteAsesor()">🔍 Ver asociados en mora</button>
+                    </div>
+                    <div class="filter-bar hidden" id="filtrosAR2">
+                        <div class="form-field"><label>Número de cuenta</label><input type="text" id="ar2cuenta" placeholder="Ej: CA-001"></div>
+                        <div class="form-field"><label>Desde</label><input type="date" id="ar2desde"></div>
+                        <div class="form-field"><label>Hasta</label><input type="date" id="ar2hasta"></div>
+                        <button class="btn btn-verde" onclick="ejecutarReporteAsesor()">🔍 Generar</button>
+                    </div>
+                </div>
+                <div class="card" id="reporteAsesorResult">
+                    <div class="empty-state"><div class="empty-icon">📊</div><h3>Selecciona un reporte</h3></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+
+
+
+<div class="modal-overlay hidden" id="modalAsociado">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <span class="modal-title" id="tituloModalAso">Nuevo Asociado</span>
+            <button class="modal-close" onclick="cerrarModal('modalAsociado')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(this,'tabAso1')">Datos personales</button>
+                <button class="tab" onclick="switchTab(this,'tabAso2')">Beneficiarios</button>
+            </div>
+            <div id="tabAso1">
+                <div class="form-grid">
+                    <div class="form-field"><label>Cédula *</label><input type="text" id="aCedula"></div>
+                    <div class="form-field"><label>Nombres *</label><input type="text" id="aNombres"></div>
+                    <div class="form-field"><label>Apellidos *</label><input type="text" id="aApellidos"></div>
+                    <div class="form-field"><label>Fecha nacimiento *</label><input type="date" id="aFechaNac"></div>
+                    <div class="form-field span-2"><label>Dirección</label><input type="text" id="aDireccion"></div>
+                    <div class="form-field"><label>Municipio</label><input type="text" id="aMunicipio"></div>
+                    <div class="form-field"><label>Teléfono</label><input type="text" id="aTelefono"></div>
+                    <div class="form-field span-2"><label>Correo electrónico</label><input type="email" id="aCorreo"></div>
+                    <div class="form-field"><label>Fecha afiliación *</label><input type="date" id="aFechaAfil"></div>
+                    <div class="form-field"><label>Cuota de sostenimiento</label><input type="number" id="aCuota"></div>
+                </div>
+            </div>
+            <div id="tabAso2" class="hidden">
+                <div id="listaBeneficiarios" style="margin-bottom:1rem"></div>
+                <button class="btn btn-outline btn-sm" onclick="agregarBeneficiario()">+ Agregar beneficiario</button>
+                <p class="form-hint mt-1">El total de porcentajes debe sumar exactamente 100%.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="cerrarModal('modalAsociado')">Cancelar</button>
+            <button class="btn btn-verde" onclick="guardarAsociado()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay hidden" id="modalCuenta">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Abrir cuenta de ahorro</span>
+            <button class="modal-close" onclick="cerrarModal('modalCuenta')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-field span-2"><label>Cédula del asociado *</label><input type="text" id="cCedAsociado" placeholder="Cédula del titular"></div>
+                <div class="form-field"><label>Número de cuenta *</label><input type="text" id="cNumero" placeholder="Ej: CA-001"></div>
+                <div class="form-field"><label>Fecha de apertura *</label><input type="date" id="cFecha"></div>
+                <div class="form-field"><label>Agencia</label><select id="cAgencia"></select></div>
+                <div class="form-field"><label>Estado inicial</label><select id="cEstado"><option value="activa">Activa</option><option value="inactiva">Inactiva</option></select></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="cerrarModal('modalCuenta')">Cancelar</button>
+            <button class="btn btn-verde" onclick="guardarCuenta()">Abrir cuenta</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay hidden" id="modalMovimiento">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Registrar movimiento</span>
+            <button class="modal-close" onclick="cerrarModal('modalMovimiento')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-field span-2"><label>Número de cuenta</label><input type="text" id="mCuenta" readonly style="background:var(--gris-100)"></div>
+                <div class="form-field"><label>Tipo de movimiento *</label>
+                    <select id="mTipo" onchange="toggleCuentaRelacionada()">
+                        <option value="deposito">Depósito</option>
+                        <option value="retiro">Retiro</option>
+                        <option value="transferencia_saliente">Transferencia saliente</option>
+                        <option value="transferencia_entrante">Transferencia entrante</option>
+                    </select>
+                </div>
+                <div class="form-field"><label>Canal *</label>
+                    <select id="mCanal"><option value="presencial">Presencial agencia</option><option value="app_movil">App móvil</option><option value="cajero_automatico">Cajero automático</option></select>
+                </div>
+                <div class="form-field"><label>Valor *</label><input type="number" id="mValor" placeholder="Ej: 500000"></div>
+                <div class="form-field"><label>Fecha y hora *</label><input type="datetime-local" id="mFechaHora"></div>
+                <div class="form-field span-2 hidden" id="cuentaRelacionadaWrap">
+                    <label>Cuenta relacionada</label>
+                    <input type="text" id="mCuentaRelacionada" placeholder="Número de cuenta destino u origen">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="cerrarModal('modalMovimiento')">Cancelar</button>
+            <button class="btn btn-verde" onclick="guardarMovimiento()">Registrar</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-overlay hidden" id="modalCredito">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <span class="modal-title">Radicar crédito</span>
+            <button class="modal-close" onclick="cerrarModal('modalCredito')">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-field"><label>Número de radicado *</label><input type="text" id="crRadicado" placeholder="Ej: CR-001"></div>
+                <div class="form-field"><label>Cédula asociado *</label><input type="text" id="crAsociado"></div>
+                <div class="form-field"><label>Valor solicitado *</label><input type="number" id="crValSol"></div>
+                <div class="form-field"><label>Valor aprobado</label><input type="number" id="crValApr"></div>
+                <div class="form-field"><label>Plazo (meses) *</label><input type="number" id="crPlazo" min="1"></div>
+                <div class="form-field"><label>Tasa mensual (%)</label><input type="number" id="crTasa" step="0.01"></div>
+                <div class="form-field"><label>Línea de crédito *</label>
+                    <select id="crLinea"><option value="libre_inversion">Libre inversión</option><option value="vivienda">Vivienda</option><option value="agropecuario">Agropecuario</option><option value="educativo">Educativo</option><option value="empresarial">Empresarial</option></select>
+                </div>
+                <div class="form-field"><label>Estado *</label>
+                    <select id="crEstado"><option value="en_estudio">En estudio</option><option value="aprobado">Aprobado</option><option value="desembolsado">Desembolsado</option></select>
+                </div>
+                <div class="form-field"><label>Fecha aprobación</label><input type="date" id="crFechaApro"></div>
+                <div class="form-field"><label>Fecha primer vencimiento</label><input type="date" id="crFechaVenc"></div>
+                <div class="form-field span-2"><label>Agencia</label><select id="crAgencia"></select></div>
+                <div class="section-divider span-2" style="margin:.5rem 0"></div>
+                <div class="form-field span-2"><label>Codeudor (cédula) — opcional</label><input type="text" id="crCodeudor" placeholder="Cédula del codeudor"></div>
+                <div class="form-field"><label>Fecha firma pagaré</label><input type="date" id="crFechaFirma"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost" onclick="cerrarModal('modalCredito')">Cancelar</button>
+            <button class="btn btn-verde" onclick="guardarCredito()">Radicar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+    import { getUser, logout } from '../js/auth.js';
+    import { get, post, put, buildQuery } from '../js/api.js';
+    import { toast, confirm, fmtMoneda, fmtFecha, fmtFechaHora, badge, buildTable, renderUserInfo } from '../js/ui.js';
+
+    const user = getUser();
+    if (!user || user.rol !== 'ASESOR') { logout(); }
+    renderUserInfo(user);
+    window.doLogout = logout;
+
+    const sections = ['dashboard','asociados','cuentas','creditos','pagos','reportes'];
+    const titles = { dashboard:'Inicio', asociados:'Asociados', cuentas:'Cuentas de ahorro', creditos:'Créditos', pagos:'Pagos de cuotas', reportes:'Reportes de agencia' };
+
+    window.showSection = function(name) {
+        sections.forEach(s => {
+            document.getElementById(`sec-${s}`).classList.toggle('hidden', s !== name);
+            document.getElementById(`nav-${s}`)?.classList.toggle('active', s === name);
+        });
+        document.getElementById('topbarTitle').textContent = titles[name] || name;
+        if (name === 'dashboard') cargarDash();
+        if (name === 'asociados') cargarAso2();
+    };
+    async function cargarDash() {
+        try {
+            const aso = await get('/asociados' + buildQuery({ estado: 'activo' }));
+            document.getElementById('dAsociados').textContent = aso?.length || 0;
+        } catch {}
+    }
+    let asoData2 = [];
+    window.cargarAso2 = async function() {
+        const estado = document.getElementById('filtroAso2Estado').value;
+        try {
+            asoData2 = await get('/asociados' + buildQuery({ estado }));
+            renderAso2(asoData2);
+        } catch(e) { document.getElementById('tablaAso2').innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+    };
+    function renderAso2(data) {
+        document.getElementById('tablaAso2').innerHTML = buildTable([
+            { key:'cedula', label:'Cédula' },
+            { key:'nombres', label:'Nombres' },
+            { key:'apellidos', label:'Apellidos' },
+            { key:'telefono', label:'Teléfono' },
+            { key:'municipio', label:'Municipio' },
+            { key:'tipoAsociado', label:'Tipo', render: v => badge(v) },
+            { key:'estado', label:'Estado', render: v => badge(v) },
+        ], data, row => `
+    <button class="btn btn-sm btn-outline" onclick="editarAsociado2('${row.cedula}')">✏</button>
+    <button class="btn btn-sm btn-ghost" onclick="verBeneficiarios('${row.cedula}')">👥 Benef.</button>
+  `);
+    }
+    window.filtrarAso2 = function() {
+        const q = document.getElementById('buscarAso2').value.toLowerCase();
+        renderAso2(asoData2.filter(a => (a.cedula||'').includes(q) || (a.nombres||'').toLowerCase().includes(q) || (a.apellidos||'').toLowerCase().includes(q)));
+    };
+
+    window.abrirModalAsociado = function() {
+        ['aCedula','aNombres','aApellidos','aFechaNac','aDireccion','aMunicipio','aTelefono','aCorreo','aFechaAfil','aCuota'].forEach(id => document.getElementById(id).value='');
+        document.getElementById('aCedula').disabled = false;
+        document.getElementById('listaBeneficiarios').innerHTML = '';
+        document.getElementById('tituloModalAso').textContent = 'Nuevo Asociado';
+        document.getElementById('modalAsociado').classList.remove('hidden');
+    };
+
+    window.editarAsociado2 = async function(ced) {
+        try {
+            const a = await get(`/asociados/${ced}`);
+            document.getElementById('aCedula').value = a.cedula; document.getElementById('aCedula').disabled = true;
+            ['aNombres','aApellidos','aTelefono','aCorreo','aDireccion','aMunicipio'].forEach(id => {
+                const key = id.replace(/^a/,'').replace(/^N/,'n').replace(/^A/,'a').replace(/^T/,'t').replace(/^C/,'c').replace(/^D/,'d').replace(/^M/,'m');
+            });
+            document.getElementById('aNombres').value = a.nombres||'';
+            document.getElementById('aApellidos').value = a.apellidos||'';
+            document.getElementById('aFechaNac').value = a.fechaNacimiento||'';
+            document.getElementById('aDireccion').value = a.direccion||'';
+            document.getElementById('aMunicipio').value = a.municipio||'';
+            document.getElementById('aTelefono').value = a.telefono||'';
+            document.getElementById('aCorreo').value = a.correoElectronico||'';
+            document.getElementById('aFechaAfil').value = a.fechaAfiliacion||'';
+            document.getElementById('aCuota').value = a.cuotaSostenimiento||'';
+            document.getElementById('tituloModalAso').textContent = 'Editar Asociado';
+            document.getElementById('modalAsociado').classList.remove('hidden');
+            const bens = await get(`/asociados/${ced}/beneficiarios`);
+            const div = document.getElementById('listaBeneficiarios');
+            div.innerHTML = bens.map((b,i) => renderBeneficiarioRow(b,i)).join('');
+        } catch(e) { toast(e.message,'error'); }
+    };
+
+    let beneficiariosTemp = [];
+    function renderBeneficiarioRow(b, i) {
+        return `<div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.6rem;margin-bottom:.6rem;align-items:end" id="benRow${i}">
+    <div class="form-field"><label>Nombre</label><input type="text" value="${b.nombreCompleto||''}" onchange="beneficiariosTemp[${i}].nombreCompleto=this.value"></div>
+    <div class="form-field"><label>Parentesco</label>
+      <select onchange="beneficiariosTemp[${i}].parentesco=this.value">
+        ${['conyuge','hijo','hija','padre','madre','hermano','hermana','otro'].map(p=>`<option value="${p}" ${b.parentesco===p?'selected':''}>${p.charAt(0).toUpperCase()+p.slice(1)}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-field"><label>% Participación</label><input type="number" value="${b.porcentajeParticipacion||''}" min="1" max="100" onchange="beneficiariosTemp[${i}].porcentajeParticipacion=parseFloat(this.value)"></div>
+    <button class="btn btn-sm btn-danger" onclick="beneficiariosTemp.splice(${i},1);document.getElementById('listaBeneficiarios').innerHTML=beneficiariosTemp.map(renderBeneficiarioRow).join('')" style="margin-bottom:.2rem">✕</button>
+  </div>`;
+    }
+    window.agregarBeneficiario = function() {
+        beneficiariosTemp.push({ nombreCompleto:'', parentesco:'hijo', porcentajeParticipacion:0, telefono:'' });
+        document.getElementById('listaBeneficiarios').innerHTML = beneficiariosTemp.map(renderBeneficiarioRow).join('');
+    };
+    window.verBeneficiarios = async function(ced) {
+        try {
+            const bens = await get(`/asociados/${ced}/beneficiarios`);
+            alert(bens.length === 0 ? 'Sin beneficiarios registrados.' : bens.map(b => `${b.nombreCompleto} — ${b.parentesco} — ${b.porcentajeParticipacion}%`).join('\n'));
+        } catch(e) { toast(e.message,'error'); }
+    };
+
+    window.guardarAsociado = async function() {
+        const ced = document.getElementById('aCedula').value.trim();
+        const editing = document.getElementById('aCedula').disabled;
+        const body = {
+            cedula: ced, nombres: document.getElementById('aNombres').value.trim(),
+            apellidos: document.getElementById('aApellidos').value.trim(),
+            fechaNacimiento: document.getElementById('aFechaNac').value,
+            direccion: document.getElementById('aDireccion').value.trim(),
+            municipio: document.getElementById('aMunicipio').value.trim(),
+            telefono: document.getElementById('aTelefono').value.trim(),
+            correoElectronico: document.getElementById('aCorreo').value.trim(),
+            fechaAfiliacion: document.getElementById('aFechaAfil').value,
+            cuotaSostenimiento: document.getElementById('aCuota').value || null,
+            tipoAsociado: 'regular', estado: 'activo',
+        };
+        try {
+            if (editing) await put(`/asociados/${ced}`, body);
+            else await post('/asociados', body);
+            toast(editing ? 'Asociado actualizado.' : 'Asociado registrado.'); cerrarModal('modalAsociado'); cargarAso2();
+        } catch(e) { toast(e.message,'error'); }
+    };
+    let cuentaActualNum = null;
+    window.cargarCuentasDeAsociado = async function() {
+        const ced = document.getElementById('cuentaAsoCed').value.trim();
+        if (!ced) { toast('Ingresa una cédula.','warning'); return; }
+        try {
+            const data = await get(`/cuentas/asociado/${ced}`);
+            document.getElementById('tablaCuentas').innerHTML = buildTable([
+                { key:'numeroCuenta', label:'N° Cuenta' },
+                { key:'fechaApertura', label:'Apertura', render: v => fmtFecha(v) },
+                { key:'codigoAgencia', label:'Agencia' },
+                { key:'estado', label:'Estado', render: v => badge(v) },
+                { key:'saldo', label:'Saldo', render: (v,r) => `<strong class="text-verde">${fmtMoneda(v||0)}</strong>` },
+            ], data, row => `
+      <button class="btn btn-sm btn-verde" onclick="abrirMovimiento('${row.numeroCuenta}')">+ Movimiento</button>
+      <button class="btn btn-sm btn-outline" onclick="verMovimientos('${row.numeroCuenta}')">Extracto</button>
+    `);
+        } catch(e) { toast(e.message,'error'); }
+    };
+
+    window.abrirModalCuenta = async function() {
+        await cargarAgenciasSelect('cAgencia');
+        document.getElementById('cFecha').valueAsDate = new Date();
+        document.getElementById('modalCuenta').classList.remove('hidden');
+    };
+    window.guardarCuenta = async function() {
+        const body = {
+            numeroCuenta: document.getElementById('cNumero').value.trim(),
+            fechaApertura: document.getElementById('cFecha').value,
+            estado: document.getElementById('cEstado').value,
+            cedulaAsociado: document.getElementById('cCedAsociado').value.trim(),
+            codigoAgencia: document.getElementById('cAgencia').value,
+        };
+        try {
+            await post('/cuentas', body);
+            toast('Cuenta abierta exitosamente.'); cerrarModal('modalCuenta');
+        } catch(e) { toast(e.message,'error'); }
+    };
+
+    window.abrirMovimiento = function(num) {
+        document.getElementById('mCuenta').value = num;
+        cuentaActualNum = num;
+        const now = new Date(); const local = new Date(now - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+        document.getElementById('mFechaHora').value = local;
+        document.getElementById('modalMovimiento').classList.remove('hidden');
+    };
+    window.toggleCuentaRelacionada = function() {
+        const tipo = document.getElementById('mTipo').value;
+        document.getElementById('cuentaRelacionadaWrap').classList.toggle('hidden', !tipo.includes('transferencia'));
+    };
+    window.guardarMovimiento = async function() {
+        const body = {
+            numeroCuenta: document.getElementById('mCuenta').value,
+            tipoMovimiento: document.getElementById('mTipo').value,
+            canal: document.getElementById('mCanal').value,
+            valorTransaccion: parseFloat(document.getElementById('mValor').value),
+            fechaHora: document.getElementById('mFechaHora').value,
+            numeroCuentaRelacionada: document.getElementById('mCuentaRelacionada').value || null,
+        };
+        try {
+            await post(`/cuentas/${body.numeroCuenta}/movimientos`, body);
+            toast('Movimiento registrado.'); cerrarModal('modalMovimiento');
+            if (document.getElementById('cuentaAsoCed').value) cargarCuentasDeAsociado();
+        } catch(e) { toast(e.message,'error'); }
+    };
+    window.verMovimientos = async function(num) {
+        try {
+            const movs = await get(`/cuentas/${num}/movimientos`);
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+      <div class="modal modal-lg">
+        <div class="modal-header"><span class="modal-title">Extracto — ${num}</span><button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button></div>
+        <div class="modal-body">
+          ${buildTable([
+                { key:'tipoMovimiento', label:'Tipo', render: v => badge(v) },
+                { key:'canal', label:'Canal' },
+                { key:'valorTransaccion', label:'Valor', render: v => fmtMoneda(v) },
+                { key:'fechaHora', label:'Fecha/Hora', render: v => fmtFechaHora(v) },
+            ], movs)}
+        </div>
+      </div>`;
+            document.body.appendChild(modal);
+        } catch(e) { toast(e.message,'error'); }
+    };
+    window.cargarCreditosDeAsociado = async function() {
+        const ced = document.getElementById('creditoAsoCed').value.trim();
+        if (!ced) { toast('Ingresa una cédula.','warning'); return; }
+        try {
+            const data = await get(`/creditos/asociado/${ced}`);
+            document.getElementById('tablaCreditos').innerHTML = buildTable([
+                { key:'numeroRadicado', label:'Radicado' },
+                { key:'lineaCredito', label:'Línea', render: v => badge(v) },
+                { key:'valorAprobado', label:'Valor aprobado', render: v => fmtMoneda(v) },
+                { key:'plazoMeses', label:'Plazo', render: v => `${v} meses` },
+                { key:'tasaInteresMensual', label:'Tasa', render: v => v ? `${v}%` : '—' },
+                { key:'fechaAprobacion', label:'Aprobación', render: v => fmtFecha(v) },
+                { key:'estadoCredito', label:'Estado', render: v => badge(v) },
+            ], data, row => `
+      <button class="btn btn-sm btn-outline" onclick="actualizarEstadoCredito('${row.numeroRadicado}', '${row.estadoCredito}')">✏ Estado</button>
+    `);
+        } catch(e) { toast(e.message,'error'); }
+    };
+    window.abrirModalCredito = async function() {
+        await cargarAgenciasSelect('crAgencia');
+        document.getElementById('modalCredito').classList.remove('hidden');
+    };
+    window.guardarCredito = async function() {
+        const body = {
+            numeroRadicado: document.getElementById('crRadicado').value.trim(),
+            cedulaAsociado: document.getElementById('crAsociado').value.trim(),
+            valorSolicitado: parseFloat(document.getElementById('crValSol').value),
+            valorAprobado: parseFloat(document.getElementById('crValApr').value)||null,
+            plazoMeses: parseInt(document.getElementById('crPlazo').value),
+            tasaInteresMensual: parseFloat(document.getElementById('crTasa').value)||null,
+            lineaCredito: document.getElementById('crLinea').value,
+            estadoCredito: document.getElementById('crEstado').value,
+            fechaAprobacion: document.getElementById('crFechaApro').value||null,
+            fechaPrimerVencimiento: document.getElementById('crFechaVenc').value||null,
+            codigoAgencia: document.getElementById('crAgencia').value,
+            cedulaAsesor: user.cedulaEmpleado||null,
+        };
+        try {
+            await post('/creditos', body);
+            const cod = document.getElementById('crCodeudor').value.trim();
+            if (cod) {
+                await post(`/creditos/${body.numeroRadicado}/codeudor`, { cedulaCodeudor: cod, fechaFirmaPagare: document.getElementById('crFechaFirma').value });
+            }
+            toast('Crédito radicado exitosamente.'); cerrarModal('modalCredito');
+        } catch(e) { toast(e.message,'error'); }
+    };
+    window.actualizarEstadoCredito = async function(radicado, estadoActual) {
+        const estados = ['en_estudio','aprobado','desembolsado','al_dia','en_mora','cancelado','castigado'];
+        const nuevo = prompt(`Estado actual: ${estadoActual}\nNuevo estado (${estados.join(', ')}):`);
+        if (!nuevo || !estados.includes(nuevo)) return;
+        try {
+            await put(`/creditos/${radicado}/estado`, { estadoCredito: nuevo });
+            toast('Estado actualizado.'); cargarCreditosDeAsociado();
+        } catch(e) { toast(e.message,'error'); }
+    };
+    window.registrarPago = async function() {
+        const radicado = document.getElementById('pagoRadicado').value.trim();
+        const body = {
+            numeroCuota: parseInt(document.getElementById('pagoCuota').value),
+            valorPagado: parseFloat(document.getElementById('pagoValor').value),
+            fechaPago: document.getElementById('pagoFecha').value,
+            estadoPago: document.getElementById('pagoEstado').value,
+        };
+        if (!radicado || !body.numeroCuota || !body.valorPagado) { toast('Completa todos los campos.','warning'); return; }
+        try {
+            await post(`/creditos/${radicado}/pagos`, body);
+            toast('Pago registrado exitosamente.');
+            ['pagoRadicado','pagoCuota','pagoValor','pagoFecha'].forEach(id => document.getElementById(id).value='');
+        } catch(e) { toast(e.message,'error'); }
+    };
+    window.cargarHistPagos = async function() {
+        const radicado = document.getElementById('buscarHistPagos').value.trim();
+        if (!radicado) return;
+        try {
+            const data = await get(`/creditos/${radicado}/pagos`);
+            document.getElementById('tablaHistPagos').innerHTML = buildTable([
+                { key:'numeroCuota', label:'Cuota' },
+                { key:'fechaPago', label:'Fecha pago', render: v => fmtFecha(v) },
+                { key:'valorPagado', label:'Valor', render: v => fmtMoneda(v) },
+                { key:'estadoPago', label:'Estado', render: v => badge(v) },
+            ], data);
+        } catch(e) { toast(e.message,'error'); }
+    };
+    let reporteAsesorActual = 1;
+    window.seleccionarReporteAsesor = function(n, el) {
+        reporteAsesorActual = n;
+        document.querySelectorAll('#sec-reportes .report-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        ['AR1','AR4','AR2'].forEach(id => document.getElementById(`filtros${id}`).classList.add('hidden'));
+        const map = { 1:'AR1', 4:'AR4', 2:'AR2' };
+        document.getElementById(`filtros${map[n]}`)?.classList.remove('hidden');
+    };
+    window.ejecutarReporteAsesor = async function() {
+        const div = document.getElementById('reporteAsesorResult');
+        div.innerHTML = '<div class="empty-state"><div class="spinner spinner-lg"></div></div>';
+        try {
+            let path = '';
+            if (reporteAsesorActual===1) path='/reportes/r1'+buildQuery({estado:document.getElementById('ar1estado').value});
+            if (reporteAsesorActual===4) path='/reportes/r4';
+            if (reporteAsesorActual===2) path='/reportes/r2'+buildQuery({cuenta:document.getElementById('ar2cuenta').value,desde:document.getElementById('ar2desde').value,hasta:document.getElementById('ar2hasta').value});
+            const data = await get(path);
+            if (!data?.length) { div.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><h3>Sin resultados</h3></div>'; return; }
+            const cols = Object.keys(data[0]).map(k=>({key:k,label:k.replace(/_/g,' '),render:(v)=>v==null?'—':typeof v==='number'&&k.includes('valor')?fmtMoneda(v):k.includes('estado')?badge(String(v)):String(v)}));
+            div.innerHTML = buildTable(cols,data);
+        } catch(e) { div.innerHTML=`<div class="alert alert-error" style="margin:1rem">${e.message}</div>`; }
+    };
+    async function cargarAgenciasSelect(selId) {
+        try {
+            const ags = await get('/agencias');
+            const s = document.getElementById(selId);
+            while(s.options.length) s.remove(0);
+            ags.forEach(a => s.add(new Option(a.nombreAgencia, a.codigoAgencia)));
+        } catch {}
+    }
+    window.cerrarModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+    window.switchTab = function(btn, tabId) {
+        btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        const parent = btn.closest('.modal-body');
+        parent.querySelectorAll('[id^="tab"]').forEach(t => t.classList.add('hidden'));
+        parent.querySelector(`#${tabId}`)?.classList.remove('hidden');
+    };
+
+    cargarDash();
+</script>
+</body>
+</html>

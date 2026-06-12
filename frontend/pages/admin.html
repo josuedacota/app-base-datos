@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COOVALLUNA — Administrador</title>
+  <link rel="preconnect" href="https:
+  <link href="https:
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="app-shell">
+
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">🌿</div>
+      <div class="brand-text"><strong>COOVALLUNA</strong><small>Panel Administrador</small></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Principal</div>
+      <button class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')">
+        <span class="nav-icon">🏠</span> Inicio
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Estructura</div>
+      <button class="nav-item" id="nav-agencias" onclick="showSection('agencias')">
+        <span class="nav-icon">🏛</span> Agencias
+      </button>
+      <button class="nav-item" id="nav-empleados" onclick="showSection('empleados')">
+        <span class="nav-icon">👥</span> Empleados
+      </button>
+      <button class="nav-item" id="nav-asociados" onclick="showSection('asociados')">
+        <span class="nav-icon">🤝</span> Asociados
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Sistema</div>
+      <button class="nav-item" id="nav-usuarios" onclick="showSection('usuarios')">
+        <span class="nav-icon">🔑</span> Usuarios
+      </button>
+      <button class="nav-item" id="nav-reportes" onclick="showSection('reportes')">
+        <span class="nav-icon">📊</span> Reportes
+      </button>
+      <button class="nav-item" id="nav-bitacora" onclick="showSection('bitacora')">
+        <span class="nav-icon">📋</span> Bitácora
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" data-avatar>A</div>
+        <div class="user-info">
+          <strong data-username>admin</strong>
+          <small data-rol>ADMINISTRADOR</small>
+        </div>
+        <button class="btn-logout" onclick="doLogout()" title="Cerrar sesión">⏏</button>
+      </div>
+    </div>
+  </aside>
+
+
+  <div class="main-area">
+    <header class="topbar">
+      <span class="topbar-title" id="topbarTitle">Inicio</span>
+      <div class="topbar-right">
+        <div class="topbar-user">
+          <div class="topbar-avatar" data-avatar>A</div>
+          <span data-username>admin</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+
+      <section id="sec-dashboard">
+        <div class="welcome-banner">
+          <div>
+            <h2>¡Bienvenido, <span data-username>Administrador</span>!</h2>
+            <p>Panel de administración del sistema COOVALLUNA Ltda.</p>
+          </div>
+          <div class="welcome-banner-icon">🌿</div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card"><div class="stat-header"><div class="stat-icon verde">🤝</div></div><div class="stat-value" id="statAsociados">—</div><div class="stat-label">Asociados activos</div></div>
+          <div class="stat-card"><div class="stat-header"><div class="stat-icon oro">💰</div></div><div class="stat-value" id="statCuentas">—</div><div class="stat-label">Cuentas de ahorro</div></div>
+          <div class="stat-card"><div class="stat-header"><div class="stat-icon azul">📄</div></div><div class="stat-value" id="statCreditos">—</div><div class="stat-label">Créditos activos</div></div>
+          <div class="stat-card"><div class="stat-header"><div class="stat-icon rojo">⚠</div></div><div class="stat-value" id="statMora">—</div><div class="stat-label">Cuotas en mora</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Accesos rápidos</span></div>
+            <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;">
+              <button class="btn btn-outline" onclick="showSection('agencias')">🏛 Agencias</button>
+              <button class="btn btn-outline" onclick="showSection('empleados')">👥 Empleados</button>
+              <button class="btn btn-outline" onclick="showSection('asociados')">🤝 Asociados</button>
+              <button class="btn btn-outline" onclick="showSection('reportes')">📊 Reportes</button>
+              <button class="btn btn-outline" onclick="showSection('usuarios')">🔑 Usuarios</button>
+              <button class="btn btn-outline" onclick="showSection('bitacora')">📋 Bitácora</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Últimos ingresos — Bitácora</span></div>
+            <div class="card-body" id="previewBitacora"><div class="empty-state" style="padding:1rem"><p>Cargando…</p></div></div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="sec-agencias" class="hidden">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Agencias</h1><p>Gestión de sedes de COOVALLUNA</p></div>
+          <div class="page-header-right">
+            <button class="btn btn-verde" onclick="abrirModalAgencia()">+ Nueva agencia</button>
+          </div>
+        </div>
+        <div class="card">
+          <div id="tablaAgencias"><div class="empty-state"><div class="spinner spinner-lg"></div></div></div>
+        </div>
+      </section>
+
+
+      <section id="sec-empleados" class="hidden">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Empleados</h1><p>Gestión del personal y jerarquía de supervisión</p></div>
+          <div class="page-header-right">
+            <button class="btn btn-verde" onclick="abrirModalEmpleado()">+ Nuevo empleado</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="filter-bar">
+            <div class="form-field"><label>Estado</label>
+              <select id="filtroEmpEstado" onchange="cargarEmpleados()">
+                <option value="">Todos</option><option value="activo">Activo</option>
+                <option value="en_licencia">En licencia</option><option value="retirado">Retirado</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Agencia</label>
+              <select id="filtroEmpAgencia" onchange="cargarEmpleados()"><option value="">Todas</option></select>
+            </div>
+          </div>
+          <div id="tablaEmpleados"></div>
+        </div>
+      </section>
+
+
+      <section id="sec-asociados" class="hidden">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Asociados</h1><p>Registro y gestión de todos los asociados</p></div>
+          <div class="page-header-right">
+            <button class="btn btn-verde" onclick="abrirModalAsociado()">+ Nuevo asociado</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="filter-bar">
+            <div class="form-field" style="flex:2"><label>Buscar</label>
+              <input type="text" id="buscarAsociado" placeholder="Nombre, cédula…" oninput="filtrarAsociados()">
+            </div>
+            <div class="form-field"><label>Estado</label>
+              <select id="filtroAsoEstado" onchange="cargarAsociados()">
+                <option value="">Todos</option><option value="activo">Activo</option>
+                <option value="suspendido">Suspendido</option><option value="retirado">Retirado</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Tipo</label>
+              <select id="filtroAsoTipo" onchange="cargarAsociados()">
+                <option value="">Todos</option><option value="regular">Regular</option><option value="fundador">Fundador</option>
+              </select>
+            </div>
+          </div>
+          <div id="tablaAsociados"></div>
+          <div class="pagination" id="paginAsociados"></div>
+        </div>
+      </section>
+
+
+      <section id="sec-usuarios" class="hidden">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Usuarios del sistema</h1><p>Cuentas de acceso y roles</p></div>
+          <div class="page-header-right">
+            <button class="btn btn-verde" onclick="abrirModalUsuario()">+ Nuevo usuario</button>
+          </div>
+        </div>
+        <div class="card" id="tablaUsuarios"></div>
+      </section>
+
+
+      <section id="sec-reportes" class="hidden">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Reportes</h1><p>7 reportes operativos del sistema</p></div>
+        </div>
+
+        <div class="report-selector">
+          <div class="report-card selected" onclick="seleccionarReporte(1,this)"><div class="rc-num">R1</div><div class="rc-name">Asociados por estado y agencia</div></div>
+          <div class="report-card" onclick="seleccionarReporte(2,this)"><div class="rc-num">R2</div><div class="rc-name">Extracto de cuenta</div></div>
+          <div class="report-card" onclick="seleccionarReporte(3,this)"><div class="rc-num">R3</div><div class="rc-name">Cartera por línea y estado</div></div>
+          <div class="report-card" onclick="seleccionarReporte(4,this)"><div class="rc-num">R4</div><div class="rc-name">Asociados en mora</div></div>
+          <div class="report-card" onclick="seleccionarReporte(5,this)"><div class="rc-num">R5</div><div class="rc-name">Historial de pagos</div></div>
+          <div class="report-card" onclick="seleccionarReporte(6,this)"><div class="rc-num">R6</div><div class="rc-name">Productividad asesores</div></div>
+          <div class="report-card" onclick="seleccionarReporte(7,this)"><div class="rc-num">R7</div><div class="rc-name">Créditos con codeudor</div></div>
+        </div>
+
+
+        <div class="card mb-2" id="reporteFiltros">
+          <div class="filter-bar" id="filtrosR1">
+            <div class="form-field"><label>Estado</label><select id="r1estado"><option value="">Todos</option><option value="activo">Activo</option><option value="suspendido">Suspendido</option><option value="retirado">Retirado</option></select></div>
+            <div class="form-field"><label>Agencia</label><select id="r1agencia"><option value="">Todas</option></select></div>
+            <div class="form-field" style="justify-content:flex-end;flex:0"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar</button></div>
+          </div>
+          <div class="filter-bar hidden" id="filtrosR2">
+            <div class="form-field"><label>Número de cuenta</label><input type="text" id="r2cuenta" placeholder="Ej: CA-001"></div>
+            <div class="form-field"><label>Desde</label><input type="date" id="r2desde"></div>
+            <div class="form-field"><label>Hasta</label><input type="date" id="r2hasta"></div>
+            <div class="form-field"><label>Tipo</label><select id="r2tipo"><option value="">Todos</option><option value="deposito">Depósito</option><option value="retiro">Retiro</option><option value="transferencia_entrante">Transferencia entrante</option><option value="transferencia_saliente">Transferencia saliente</option></select></div>
+            <div class="form-field" style="justify-content:flex-end;flex:0"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar</button></div>
+          </div>
+          <div class="filter-bar hidden" id="filtrosR3">
+            <div class="form-field"><label>Agencia</label><select id="r3agencia"><option value="">Todas</option></select></div>
+            <div class="form-field"><label>Desde</label><input type="date" id="r3desde"></div>
+            <div class="form-field"><label>Hasta</label><input type="date" id="r3hasta"></div>
+            <div class="form-field" style="justify-content:flex-end;flex:0"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar</button></div>
+          </div>
+          <div class="filter-bar hidden" id="filtrosR4">
+            <div class="form-field" style="justify-content:flex-end;flex:1"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar reporte de mora</button></div>
+          </div>
+          <div class="filter-bar hidden" id="filtrosR5">
+            <div class="form-field"><label>Número de radicado</label><input type="text" id="r5radicado" placeholder="Ej: CR-001"></div>
+            <div class="form-field" style="justify-content:flex-end;flex:0"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar</button></div>
+          </div>
+          <div class="filter-bar hidden" id="filtrosR6">
+            <div class="form-field"><label>Agencia</label><select id="r6agencia"><option value="">Todas</option></select></div>
+            <div class="form-field"><label>Desde</label><input type="date" id="r6desde"></div>
+            <div class="form-field"><label>Hasta</label><input type="date" id="r6hasta"></div>
+            <div class="form-field" style="justify-content:flex-end;flex:0"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar</button></div>
+          </div>
+          <div class="filter-bar hidden" id="filtrosR7">
+            <div class="form-field" style="justify-content:flex-end;flex:1"><button class="btn btn-verde" onclick="ejecutarReporte()">🔍 Generar reporte de codeudores</button></div>
+          </div>
+        </div>
+
+        <div class="card" id="reporteResultado">
+          <div class="empty-state"><div class="empty-icon">📊</div><h3>Selecciona un reporte</h3><p>Elige un reporte y presiona Generar para ver los resultados.</p></div>
+        </div>
+      </section>
+
+
+      <section id="sec-bitacora" class="hidden">
+        <div class="page-header">
+          <div class="page-header-left"><h1>Bitácora del sistema</h1><p>Registro de accesos y operaciones críticas</p></div>
+        </div>
+        <div class="card">
+          <div class="filter-bar">
+            <div class="form-field"><label>Desde</label><input type="date" id="bitDesde"></div>
+            <div class="form-field"><label>Hasta</label><input type="date" id="bitHasta"></div>
+            <div class="form-field"><label>Usuario</label><input type="text" id="bitUsuario" placeholder="Nombre de usuario…"></div>
+            <button class="btn btn-verde" onclick="cargarBitacora()">🔍 Filtrar</button>
+          </div>
+          <div id="tablaBitacora"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+
+
+
+<div class="modal-overlay hidden" id="modalAgencia">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="tituloModalAgencia">Nueva Agencia</span>
+      <button class="modal-close" onclick="cerrarModal('modalAgencia')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-field"><label>Código agencia *</label><input type="text" id="agCodigo" placeholder="Ej: AG-001"></div>
+        <div class="form-field"><label>Nombre *</label><input type="text" id="agNombre" placeholder="Ej: Tuluá Centro"></div>
+        <div class="form-field span-2"><label>Dirección *</label><input type="text" id="agDireccion" placeholder="Ej: Cra 25 # 23-45"></div>
+        <div class="form-field"><label>Municipio *</label><input type="text" id="agMunicipio" placeholder="Ej: Tuluá"></div>
+        <div class="form-field"><label>Teléfono</label><input type="text" id="agTelefono" placeholder="Ej: 6022345678"></div>
+        <div class="form-field"><label>Fecha de apertura *</label><input type="date" id="agFecha"></div>
+        <div class="form-field"><label>Estado</label><select id="agEstado"><option value="activa">Activa</option><option value="inactiva">Inactiva</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModal('modalAgencia')">Cancelar</button>
+      <button class="btn btn-verde" id="btnGuardarAgencia" onclick="guardarAgencia()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay hidden" id="modalEmpleado">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="tituloModalEmpleado">Nuevo Empleado</span>
+      <button class="modal-close" onclick="cerrarModal('modalEmpleado')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-field"><label>Cédula *</label><input type="text" id="empCedula"></div>
+        <div class="form-field"><label>Nombres *</label><input type="text" id="empNombres"></div>
+        <div class="form-field"><label>Apellidos *</label><input type="text" id="empApellidos"></div>
+        <div class="form-field"><label>Cargo *</label><input type="text" id="empCargo" placeholder="Ej: Asesor comercial"></div>
+        <div class="form-field"><label>Tipo empleado *</label>
+          <select id="empTipo"><option value="cajero">Cajero / Ventanilla</option><option value="asesor">Asesor comercial</option><option value="director">Director de agencia</option></select>
+        </div>
+        <div class="form-field"><label>Agencia *</label><select id="empAgencia"></select></div>
+        <div class="form-field"><label>Fecha de ingreso *</label><input type="date" id="empFecha"></div>
+        <div class="form-field"><label>Salario base</label><input type="number" id="empSalario" placeholder="Ej: 1500000"></div>
+        <div class="form-field span-2"><label>Correo corporativo *</label><input type="email" id="empCorreo" placeholder="nombre@coovalluna.com"></div>
+        <div class="form-field"><label>Supervisor (cédula)</label><input type="text" id="empSupervisor" placeholder="Opcional"></div>
+        <div class="form-field"><label>Estado</label><select id="empEstado"><option value="activo">Activo</option><option value="en_licencia">En licencia</option><option value="retirado">Retirado</option></select></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModal('modalEmpleado')">Cancelar</button>
+      <button class="btn btn-verde" onclick="guardarEmpleado()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay hidden" id="modalAsociado">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <span class="modal-title" id="tituloModalAsociado">Nuevo Asociado</span>
+      <button class="modal-close" onclick="cerrarModal('modalAsociado')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab(this,'tabDatosAsoc')">Datos personales</button>
+        <button class="tab" onclick="switchTab(this,'tabFundador')">Datos fundador</button>
+      </div>
+      <div id="tabDatosAsoc">
+        <div class="form-grid">
+          <div class="form-field"><label>Cédula *</label><input type="text" id="asoCedula"></div>
+          <div class="form-field"><label>Nombres *</label><input type="text" id="asoNombres"></div>
+          <div class="form-field"><label>Apellidos *</label><input type="text" id="asoApellidos"></div>
+          <div class="form-field"><label>Fecha de nacimiento *</label><input type="date" id="asoFechaNac"></div>
+          <div class="form-field span-2"><label>Dirección</label><input type="text" id="asoDireccion"></div>
+          <div class="form-field"><label>Municipio</label><input type="text" id="asoMunicipio"></div>
+          <div class="form-field"><label>Teléfono</label><input type="text" id="asoTelefono"></div>
+          <div class="form-field span-2"><label>Correo electrónico</label><input type="email" id="asoCorreo"></div>
+          <div class="form-field"><label>Fecha de afiliación *</label><input type="date" id="asoFechaAfil"></div>
+          <div class="form-field"><label>Cuota de sostenimiento</label><input type="number" id="asoCuota" placeholder="Ej: 25000"></div>
+          <div class="form-field"><label>Tipo asociado *</label><select id="asoTipo"><option value="regular">Regular</option><option value="fundador">Fundador</option></select></div>
+          <div class="form-field"><label>Estado</label><select id="asoEstado"><option value="activo">Activo</option><option value="suspendido">Suspendido</option><option value="retirado">Retirado</option></select></div>
+        </div>
+      </div>
+      <div id="tabFundador" class="hidden">
+        <p class="text-muted mb-2" style="font-size:.85rem">Solo aplica si el asociado es de tipo <strong>Fundador</strong>.</p>
+        <div class="form-grid">
+          <div class="form-field"><label>N° Acta fundacional</label><input type="text" id="fundActa" placeholder="Ej: ACTA-001-1991"></div>
+          <div class="form-field"><label>Año de reconocimiento</label><input type="number" id="fundAnio" placeholder="Ej: 1991" min="1991" max="1996"></div>
+          <div class="form-field span-2"><label>Beneficios especiales</label><textarea id="fundBeneficios" placeholder="Descripción de los beneficios especiales..."></textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModal('modalAsociado')">Cancelar</button>
+      <button class="btn btn-verde" onclick="guardarAsociado()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay hidden" id="modalUsuario">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Nuevo usuario del sistema</span>
+      <button class="modal-close" onclick="cerrarModal('modalUsuario')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-field span-2"><label>Nombre de usuario *</label><input type="text" id="usrUsername" placeholder="Ej: jgomez"></div>
+        <div class="form-field"><label>Rol *</label>
+          <select id="usrRol">
+            <option value="ADMIN">Administrador</option>
+            <option value="ASESOR">Asesor / Cajero</option>
+            <option value="ASOCIADO">Asociado (autoservicio)</option>
+          </select>
+        </div>
+        <div class="form-field"><label>Cédula empleado</label><input type="text" id="usrCedEmp" placeholder="Si aplica"></div>
+        <div class="form-field span-2"><label>Cédula asociado</label><input type="text" id="usrCedAso" placeholder="Si aplica"></div>
+      </div>
+      <div class="alert alert-warning mt-2"><span>🔑</span><span>Se generará una contraseña temporal. El usuario deberá cambiarla al primer ingreso.</span></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModal('modalUsuario')">Cancelar</button>
+      <button class="btn btn-verde" onclick="guardarUsuario()">Crear usuario</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+  import { getUser, logout } from '../js/auth.js';
+  import { get, post, put, buildQuery } from '../js/api.js';
+  import { toast, confirm, fmtMoneda, fmtFecha, fmtFechaHora, badge, buildTable, renderUserInfo } from '../js/ui.js';
+
+
+  const user = getUser();
+  if (!user || user.rol !== 'ADMIN') { logout(); }
+  renderUserInfo(user);
+  window.doLogout = logout;
+
+
+  const sections = ['dashboard','agencias','empleados','asociados','usuarios','reportes','bitacora'];
+  const titles   = { dashboard:'Inicio', agencias:'Agencias', empleados:'Empleados', asociados:'Asociados', usuarios:'Usuarios del sistema', reportes:'Reportes', bitacora:'Bitácora del sistema' };
+
+  window.showSection = function(name) {
+    sections.forEach(s => {
+      document.getElementById(`sec-${s}`).classList.toggle('hidden', s !== name);
+      document.getElementById(`nav-${s}`)?.classList.toggle('active', s === name);
+    });
+    document.getElementById('topbarTitle').textContent = titles[name] || name;
+    if (name === 'dashboard') cargarDashboard();
+    if (name === 'agencias') cargarAgencias();
+    if (name === 'empleados') { cargarSelectAgencias('filtroEmpAgencia'); cargarEmpleados(); }
+    if (name === 'asociados') cargarAsociados();
+    if (name === 'usuarios') cargarUsuarios();
+    if (name === 'bitacora') cargarBitacora();
+    if (name === 'reportes') cargarSelectsReportes();
+  };
+
+
+  async function cargarDashboard() {
+    try {
+      const [aso, bit] = await Promise.all([
+        get('/asociados' + buildQuery({ estado: 'activo' })),
+        get('/bitacora' + buildQuery({ limite: 5 }))
+      ]);
+      document.getElementById('statAsociados').textContent = aso?.length ?? '—';
+
+
+      const rows = (bit || []).slice(0,5);
+      document.getElementById('previewBitacora').innerHTML = rows.length === 0
+              ? '<p class="text-muted" style="font-size:.85rem">Sin registros.</p>'
+              : rows.map(r => `<div style="display:flex;justify-content:space-between;font-size:.8rem;padding:.3rem 0;border-bottom:1px solid var(--gris-300)"><span><strong>${r.username||'—'}</strong> — ${r.accion||''}</span><span class="text-muted">${fmtFechaHora(r.fecha_hora)}</span></div>`).join('');
+    } catch(e) { console.error(e); }
+  }
+
+
+  async function cargarAgencias() {
+    const div = document.getElementById('tablaAgencias');
+    try {
+      const data = await get('/agencias');
+      div.innerHTML = buildTable([
+        { key:'codigo_agencia', label:'Código' },
+        { key:'nombre_agencia', label:'Nombre' },
+        { key:'municipio', label:'Municipio' },
+        { key:'telefono', label:'Teléfono' },
+        { key:'fecha_apertura', label:'Apertura', render: v => fmtFecha(v) },
+        { key:'estado', label:'Estado', render: v => badge(v) },
+      ], data, row => `
+      <button class="btn btn-sm btn-outline" onclick="editarAgencia('${row.codigo_agencia}')">✏ Editar</button>
+    `);
+    } catch(e) { div.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+  }
+  window.cargarAgencias = cargarAgencias;
+
+  let agenciaEditando = null;
+  window.abrirModalAgencia = function(codigo) {
+    agenciaEditando = codigo || null;
+    document.getElementById('tituloModalAgencia').textContent = codigo ? 'Editar Agencia' : 'Nueva Agencia';
+    ['agCodigo','agNombre','agDireccion','agMunicipio','agTelefono','agFecha'].forEach(id => document.getElementById(id).value = '');
+    if (!codigo) { document.getElementById('agCodigo').disabled = false; }
+    document.getElementById('modalAgencia').classList.remove('hidden');
+  };
+  window.editarAgencia = async function(cod) {
+    try {
+      const a = await get(`/agencias/${cod}`);
+      document.getElementById('agCodigo').value = a.codigoAgencia || '';
+      document.getElementById('agCodigo').disabled = true;
+      document.getElementById('agNombre').value = a.nombreAgencia || '';
+      document.getElementById('agDireccion').value = a.direccion || '';
+      document.getElementById('agMunicipio').value = a.municipio || '';
+      document.getElementById('agTelefono').value = a.telefono || '';
+      document.getElementById('agFecha').value = a.fechaApertura || '';
+      document.getElementById('agEstado').value = a.estado || 'activa';
+      agenciaEditando = cod;
+      document.getElementById('tituloModalAgencia').textContent = 'Editar Agencia';
+      document.getElementById('modalAgencia').classList.remove('hidden');
+    } catch(e) { toast(e.message, 'error'); }
+  };
+  window.guardarAgencia = async function() {
+    const body = {
+      codigoAgencia: document.getElementById('agCodigo').value.trim(),
+      nombreAgencia: document.getElementById('agNombre').value.trim(),
+      direccion: document.getElementById('agDireccion').value.trim(),
+      municipio: document.getElementById('agMunicipio').value.trim(),
+      telefono: document.getElementById('agTelefono').value.trim(),
+      fechaApertura: document.getElementById('agFecha').value,
+      estado: document.getElementById('agEstado').value,
+    };
+    try {
+      if (agenciaEditando) await put(`/agencias/${agenciaEditando}`, body);
+      else await post('/agencias', body);
+      toast(agenciaEditando ? 'Agencia actualizada.' : 'Agencia creada.', 'success');
+      cerrarModal('modalAgencia');
+      cargarAgencias();
+    } catch(e) { toast(e.message, 'error'); }
+  };
+
+
+  async function cargarSelectAgencias(selectId) {
+    try {
+      const data = await get('/agencias');
+      const sel = document.getElementById(selectId);
+      const prev = sel.value;
+
+      while (sel.options.length > 1) sel.remove(1);
+      data.forEach(a => sel.add(new Option(a.nombreAgencia, a.codigoAgencia)));
+      if (prev) sel.value = prev;
+    } catch(e) {}
+  }
+  window.cargarEmpleados = async function() {
+    const div = document.getElementById('tablaEmpleados');
+    const estado = document.getElementById('filtroEmpEstado').value;
+    const agencia = document.getElementById('filtroEmpAgencia').value;
+    try {
+      const data = await get('/empleados' + buildQuery({ estado, agencia }));
+      div.innerHTML = buildTable([
+        { key:'cedulaEmpleado', label:'Cédula' },
+        { key:'nombres', label:'Nombres' },
+        { key:'apellidos', label:'Apellidos' },
+        { key:'cargo', label:'Cargo' },
+        { key:'tipoEmpleado', label:'Tipo', render: v => badge(v) },
+        { key:'codigoAgencia', label:'Agencia' },
+        { key:'estadoLaboral', label:'Estado', render: v => badge(v) },
+      ], data, row => `
+      <button class="btn btn-sm btn-outline" onclick="editarEmpleado('${row.cedulaEmpleado}')">✏</button>
+    `);
+    } catch(e) { div.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+  };
+  window.abrirModalEmpleado = async function() {
+    await cargarSelectAgencias('empAgencia');
+    document.getElementById('tituloModalEmpleado').textContent = 'Nuevo Empleado';
+    ['empCedula','empNombres','empApellidos','empCargo','empCorreo','empSupervisor','empSalario'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('empCedula').disabled = false;
+    document.getElementById('modalEmpleado').classList.remove('hidden');
+  };
+  window.editarEmpleado = async function(ced) {
+    await cargarSelectAgencias('empAgencia');
+    try {
+      const e = await get(`/empleados/${ced}`);
+      document.getElementById('empCedula').value = e.cedulaEmpleado||''; document.getElementById('empCedula').disabled = true;
+      document.getElementById('empNombres').value = e.nombres||'';
+      document.getElementById('empApellidos').value = e.apellidos||'';
+      document.getElementById('empCargo').value = e.cargo||'';
+      document.getElementById('empTipo').value = e.tipoEmpleado||'cajero';
+      document.getElementById('empAgencia').value = e.codigoAgencia||'';
+      document.getElementById('empFecha').value = e.fechaIngreso||'';
+      document.getElementById('empSalario').value = e.salarioBase||'';
+      document.getElementById('empCorreo').value = e.correoCorportativo||'';
+      document.getElementById('empSupervisor').value = e.cedulaSupervisor||'';
+      document.getElementById('empEstado').value = e.estadoLaboral||'activo';
+      document.getElementById('tituloModalEmpleado').textContent = 'Editar Empleado';
+      document.getElementById('modalEmpleado').classList.remove('hidden');
+    } catch(err) { toast(err.message,'error'); }
+  };
+  window.guardarEmpleado = async function() {
+    const ced = document.getElementById('empCedula').value.trim();
+    const body = {
+      cedulaEmpleado: ced,
+      nombres: document.getElementById('empNombres').value.trim(),
+      apellidos: document.getElementById('empApellidos').value.trim(),
+      cargo: document.getElementById('empCargo').value.trim(),
+      tipoEmpleado: document.getElementById('empTipo').value,
+      codigoAgencia: document.getElementById('empAgencia').value,
+      fechaIngreso: document.getElementById('empFecha').value,
+      salarioBase: document.getElementById('empSalario').value || null,
+      correoCorportativo: document.getElementById('empCorreo').value.trim(),
+      cedulaSupervisor: document.getElementById('empSupervisor').value.trim() || null,
+      estadoLaboral: document.getElementById('empEstado').value,
+    };
+    try {
+      if (document.getElementById('empCedula').disabled) await put(`/empleados/${ced}`, body);
+      else await post('/empleados', body);
+      toast('Empleado guardado.'); cerrarModal('modalEmpleado'); cargarEmpleados();
+    } catch(e) { toast(e.message,'error'); }
+  };
+
+
+  let todosAsociados = [];
+  window.cargarAsociados = async function() {
+    const estado = document.getElementById('filtroAsoEstado').value;
+    const tipo = document.getElementById('filtroAsoTipo').value;
+    const div = document.getElementById('tablaAsociados');
+    try {
+      todosAsociados = await get('/asociados' + buildQuery({ estado, tipo }));
+      renderTablaAsociados(todosAsociados);
+    } catch(e) { div.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+  };
+  function renderTablaAsociados(data) {
+    document.getElementById('tablaAsociados').innerHTML = buildTable([
+      { key:'cedula', label:'Cédula' },
+      { key:'nombres', label:'Nombres' },
+      { key:'apellidos', label:'Apellidos' },
+      { key:'tipoAsociado', label:'Tipo', render: v => badge(v) },
+      { key:'municipio', label:'Municipio' },
+      { key:'fechaAfiliacion', label:'Afiliación', render: v => fmtFecha(v) },
+      { key:'estado', label:'Estado', render: v => badge(v) },
+    ], data, row => `
+    <button class="btn btn-sm btn-outline" onclick="editarAsociado('${row.cedula}')">✏</button>
+  `);
+  }
+  window.filtrarAsociados = function() {
+    const q = document.getElementById('buscarAsociado').value.toLowerCase();
+    renderTablaAsociados(todosAsociados.filter(a =>
+            (a.cedula||'').includes(q) || (a.nombres||'').toLowerCase().includes(q) || (a.apellidos||'').toLowerCase().includes(q)
+    ));
+  };
+  window.abrirModalAsociado = function() {
+    document.getElementById('tituloModalAsociado').textContent = 'Nuevo Asociado';
+    ['asoCedula','asoNombres','asoApellidos','asoFechaNac','asoDireccion','asoMunicipio','asoTelefono','asoCorreo','asoFechaAfil','asoCuota','fundActa','fundAnio','fundBeneficios'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('asoCedula').disabled = false;
+    document.getElementById('modalAsociado').classList.remove('hidden');
+  };
+  window.editarAsociado = async function(ced) {
+    try {
+      const a = await get(`/asociados/${ced}`);
+      document.getElementById('asoCedula').value = a.cedula||''; document.getElementById('asoCedula').disabled = true;
+      document.getElementById('asoNombres').value = a.nombres||'';
+      document.getElementById('asoApellidos').value = a.apellidos||'';
+      document.getElementById('asoFechaNac').value = a.fechaNacimiento||'';
+      document.getElementById('asoDireccion').value = a.direccion||'';
+      document.getElementById('asoMunicipio').value = a.municipio||'';
+      document.getElementById('asoTelefono').value = a.telefono||'';
+      document.getElementById('asoCorreo').value = a.correoElectronico||'';
+      document.getElementById('asoFechaAfil').value = a.fechaAfiliacion||'';
+      document.getElementById('asoCuota').value = a.cuotaSostenimiento||'';
+      document.getElementById('asoTipo').value = a.tipoAsociado||'regular';
+      document.getElementById('asoEstado').value = a.estado||'activo';
+      document.getElementById('tituloModalAsociado').textContent = 'Editar Asociado';
+      document.getElementById('modalAsociado').classList.remove('hidden');
+    } catch(e) { toast(e.message,'error'); }
+  };
+  window.guardarAsociado = async function() {
+    const ced = document.getElementById('asoCedula').value.trim();
+    const editing = document.getElementById('asoCedula').disabled;
+    const body = {
+      cedula: ced, nombres: document.getElementById('asoNombres').value.trim(),
+      apellidos: document.getElementById('asoApellidos').value.trim(),
+      fechaNacimiento: document.getElementById('asoFechaNac').value,
+      direccion: document.getElementById('asoDireccion').value.trim(),
+      municipio: document.getElementById('asoMunicipio').value.trim(),
+      telefono: document.getElementById('asoTelefono').value.trim(),
+      correoElectronico: document.getElementById('asoCorreo').value.trim(),
+      fechaAfiliacion: document.getElementById('asoFechaAfil').value,
+      cuotaSostenimiento: document.getElementById('asoCuota').value || null,
+      tipoAsociado: document.getElementById('asoTipo').value,
+      estado: document.getElementById('asoEstado').value,
+    };
+    try {
+      if (editing) await put(`/asociados/${ced}`, body);
+      else {
+        await post('/asociados', body);
+        const tipo = document.getElementById('asoTipo').value;
+        if (tipo === 'fundador') {
+          const fb = { cedula: ced, numeroActaFundacional: document.getElementById('fundActa').value, anioReconocimiento: parseInt(document.getElementById('fundAnio').value)||null, beneficiosEspeciales: document.getElementById('fundBeneficios').value };
+          await post(`/asociados/${ced}/fundador`, fb);
+        }
+      }
+      toast(editing ? 'Asociado actualizado.' : 'Asociado creado.'); cerrarModal('modalAsociado'); cargarAsociados();
+    } catch(e) { toast(e.message,'error'); }
+  };
+
+
+  async function cargarUsuarios() {
+    const div = document.getElementById('tablaUsuarios');
+    try {
+      const data = await get('/usuarios');
+      div.innerHTML = buildTable([
+        { key:'username', label:'Usuario' },
+        { key:'rol', label:'Rol', render: v => badge(v) },
+        { key:'cedulaEmpleado', label:'Empleado (cédula)' },
+        { key:'cedulaAsociado', label:'Asociado (cédula)' },
+        { key:'debeCambiarClave', label:'Cambio clave', render: v => v ? '<span class="badge badge-pendiente">Pendiente</span>' : '<span class="badge badge-activo">No</span>' },
+      ], data, row => `
+      <button class="btn btn-sm btn-danger" onclick="resetearClave(${row.idUsuario})">🔑 Reset</button>
+    `);
+    } catch(e) { div.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+  }
+  window.abrirModalUsuario = function() {
+    ['usrUsername','usrCedEmp','usrCedAso'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('modalUsuario').classList.remove('hidden');
+  };
+  window.guardarUsuario = async function() {
+    const body = {
+      username: document.getElementById('usrUsername').value.trim(),
+      rol: document.getElementById('usrRol').value,
+      cedulaEmpleado: document.getElementById('usrCedEmp').value.trim() || null,
+      cedulaAsociado: document.getElementById('usrCedAso').value.trim() || null,
+    };
+    try {
+      const res = await post('/usuarios', body);
+      toast(`Usuario creado. Clave temporal: ${res.claveTemporal || '(ver servidor)'}`, 'success', 6000);
+      cerrarModal('modalUsuario'); cargarUsuarios();
+    } catch(e) { toast(e.message,'error'); }
+  };
+  window.resetearClave = async function(id) {
+    if (!(await confirm('¿Resetear la contraseña de este usuario?'))) return;
+    try {
+      const res = await post(`/usuarios/${id}/resetClave`, {});
+      toast(`Clave temporal: ${res.claveTemporal || '—'}`, 'success', 6000);
+    } catch(e) { toast(e.message,'error'); }
+  };
+
+
+  let reporteActual = 1;
+  window.seleccionarReporte = function(n, el) {
+    reporteActual = n;
+    document.querySelectorAll('.report-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    for (let i = 1; i <= 7; i++) {
+      document.getElementById(`filtrosR${i}`).classList.toggle('hidden', i !== n);
+    }
+    document.getElementById('reporteResultado').innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><h3>Listo</h3><p>Presiona Generar para ver los resultados.</p></div>';
+  };
+  async function cargarSelectsReportes() {
+    try {
+      const ags = await get('/agencias');
+      ['r1agencia','r3agencia','r6agencia'].forEach(id => {
+        const s = document.getElementById(id);
+        while (s.options.length > 1) s.remove(1);
+        ags.forEach(a => s.add(new Option(a.nombreAgencia, a.codigoAgencia)));
+      });
+    } catch(e) {}
+  }
+  window.ejecutarReporte = async function() {
+    const n = reporteActual;
+    const div = document.getElementById('reporteResultado');
+    div.innerHTML = '<div class="empty-state"><div class="spinner spinner-lg"></div><p>Generando reporte…</p></div>';
+    try {
+      let path = '';
+      if (n===1) path = '/reportes/r1' + buildQuery({ estado: document.getElementById('r1estado').value, agencia: document.getElementById('r1agencia').value });
+      if (n===2) path = '/reportes/r2' + buildQuery({ cuenta: document.getElementById('r2cuenta').value, desde: document.getElementById('r2desde').value, hasta: document.getElementById('r2hasta').value, tipo: document.getElementById('r2tipo').value });
+      if (n===3) path = '/reportes/r3' + buildQuery({ agencia: document.getElementById('r3agencia').value, desde: document.getElementById('r3desde').value, hasta: document.getElementById('r3hasta').value });
+      if (n===4) path = '/reportes/r4';
+      if (n===5) path = '/reportes/r5' + buildQuery({ radicado: document.getElementById('r5radicado').value });
+      if (n===6) path = '/reportes/r6' + buildQuery({ agencia: document.getElementById('r6agencia').value, desde: document.getElementById('r6desde').value, hasta: document.getElementById('r6hasta').value });
+      if (n===7) path = '/reportes/r7';
+
+      const data = await get(path);
+      if (!data || data.length === 0) {
+        div.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><h3>Sin resultados</h3><p>No hay datos con los filtros seleccionados.</p></div>';
+        return;
+      }
+
+      const cols = Object.keys(data[0]).map(k => ({
+        key: k, label: k.replace(/_/g,' ').replace(/\b\w/g, c => c.toUpperCase()),
+        render: (v) => {
+          if (v == null) return '—';
+          if (typeof v === 'number' && k.includes('valor')) return fmtMoneda(v);
+          if (typeof v === 'string' && (k.includes('fecha') || k.includes('hora'))) return k.includes('hora') ? fmtFechaHora(v) : fmtFecha(v);
+          if (k.includes('estado')) return badge(String(v));
+          if (k.includes('porcentaje')) return `${v}%`;
+          return String(v);
+        }
+      }));
+      div.innerHTML = `<div style="padding:.8rem 1rem;background:var(--gris-100);border-bottom:1px solid var(--gris-300);display:flex;justify-content:space-between;align-items:center"><span class="fw-600">${data.length} registros</span></div>` + buildTable(cols, data);
+    } catch(e) { div.innerHTML = `<div class="alert alert-error" style="margin:1rem">${e.message}</div>`; }
+  };
+
+
+  window.cargarBitacora = async function() {
+    const div = document.getElementById('tablaBitacora');
+    const params = {
+      desde: document.getElementById('bitDesde').value,
+      hasta: document.getElementById('bitHasta').value,
+      usuario: document.getElementById('bitUsuario').value,
+    };
+    try {
+      const data = await get('/bitacora' + buildQuery(params));
+      div.innerHTML = buildTable([
+        { key:'fecha_hora', label:'Fecha y hora', render: v => fmtFechaHora(v) },
+        { key:'username', label:'Usuario' },
+        { key:'accion', label:'Acción' },
+        { key:'tabla_afectada', label:'Entidad' },
+        { key:'ip', label:'IP' },
+      ], data);
+    } catch(e) { div.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+  };
+
+
+  window.cerrarModal = function(id) { document.getElementById(id).classList.add('hidden'); };
+  window.switchTab = function(btn, tabId) {
+    const parent = btn.closest('.modal-body');
+    parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const allTabs = ['tabDatosAsoc','tabFundador'];
+    allTabs.forEach(t => { const el = document.getElementById(t); if (el) el.classList.toggle('hidden', t !== tabId); });
+  };
+
+
+  cargarDashboard();
+</script>
+</body>
+</html>

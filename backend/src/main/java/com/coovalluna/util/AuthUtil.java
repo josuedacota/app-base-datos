@@ -20,7 +20,7 @@ public class AuthUtil {
     private AuthUtil() {
     }
 
-    // Generar JWT
+
     public static String generarToken(UsuarioSistema usuario) {
 
         return JWT.create()
@@ -36,7 +36,7 @@ public class AuthUtil {
                 .sign(algorithm);
     }
 
-    // Validar JWT
+
     public static DecodedJWT validarJWT(String token) {
 
         return JWT.require(algorithm)
@@ -44,7 +44,7 @@ public class AuthUtil {
                 .verify(token);
     }
 
-    // Obtener rol
+
     public static String obtenerRol(String token) {
 
         return validarJWT(token)
@@ -52,7 +52,7 @@ public class AuthUtil {
                 .asString();
     }
 
-    // Verificar admin
+
     public static boolean esAdmin(String token) {
 
         return "ADMIN"
@@ -61,7 +61,7 @@ public class AuthUtil {
                 );
     }
 
-    // Verificar admin o asesor
+
     public static boolean esAdminOAsesor(String token) {
 
         String rol = obtenerRol(token);
@@ -70,7 +70,7 @@ public class AuthUtil {
                 || "ASESOR".equalsIgnoreCase(rol);
     }
 
-    // Hash contraseña
+
     public static String hashPassword(String password) {
 
         try {
@@ -105,7 +105,7 @@ public class AuthUtil {
         }
     }
 
-    // Generar clave temporal
+
     public static String generarClaveTemporal() {
 
         String caracteres =

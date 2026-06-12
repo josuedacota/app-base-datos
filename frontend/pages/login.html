@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COOVALLUNA — Iniciar Sesión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="login-page">
+
+    <aside class="login-brand">
+        <div class="login-brand-content">
+            <div class="login-logo">🌿</div>
+            <h1>COOVALLUNA</h1>
+            <p>Cooperativa de Ahorro y Crédito Ltda.<br>Tuluá, Valle del Cauca</p>
+
+            <div style="margin-top:2.5rem; display:flex; flex-direction:column; gap:.8rem;">
+                <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.7);font-size:.82rem;">
+                    <span style="font-size:1.1rem;">🏦</span> Más de 4.000 asociados activos
+                </div>
+                <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.7);font-size:.82rem;">
+                    <span style="font-size:1.1rem;">📍</span> Sedes en Tuluá, Riofrío, Trujillo y Andalucía
+                </div>
+                <div style="display:flex;align-items:center;gap:.75rem;color:rgba(255,255,255,.7);font-size:.82rem;">
+                    <span style="font-size:1.1rem;">📅</span> Fundada en 1991
+                </div>
+            </div>
+
+            <div class="login-brand-tagline">
+                © 2026 COOVALLUNA Ltda. — Sistema de Información v1.0
+            </div>
+        </div>
+    </aside>
+
+    <main class="login-form-panel">
+        <div style="max-width:380px; width:100%; margin:0 auto;">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Ingresa tus credenciales para acceder al sistema.</p>
+
+            <div id="alertBox" class="alert alert-error hidden">
+                <span>⚠</span><span id="alertMsg"></span>
+            </div>
+            <div id="warningBox" class="alert alert-warning hidden">
+                <span>🔑</span><span>Debes cambiar tu contraseña al ingresar por primera vez.</span>
+            </div>
+
+            <div style="margin-bottom:1.2rem;">
+                <label class="form-label">Usuario</label>
+                <div class="input-wrap">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="username" class="form-input" placeholder="Nombre de usuario" autocomplete="username" autofocus>
+                </div>
+            </div>
+
+            <div style="margin-bottom:1.4rem;">
+                <label class="form-label">Contraseña</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" autocomplete="current-password">
+                    <button class="btn-toggle-pass" id="togglePass" type="button" title="Mostrar/ocultar contraseña">👁</button>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="btnLogin">
+                <span id="btnText">Ingresar</span>
+                <span id="btnSpinner" class="hidden" style="display:inline-flex;align-items:center;gap:.4rem"><span class="spinner" style="width:16px;height:16px;border-color:rgba(255,255,255,.3);border-top-color:#fff"></span> Verificando…</span>
+            </button>
+
+            <div class="login-footer">
+                <a href="#" class="link-subtle" id="linkRecuperar">¿Olvidaste tu contraseña?</a>
+                &nbsp;·&nbsp; Contacta a tu administrador
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal-overlay hidden" id="modalCambio">
+    <div class="modal" style="max-width:420px">
+        <div class="modal-header">
+            <span class="modal-title">🔑 Cambiar contraseña</span>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom:1rem;font-size:.88rem;color:var(--gris-500)">Es tu primer ingreso. Debes establecer una nueva contraseña.</p>
+            <div class="form-field mb-2">
+                <label>Nueva contraseña</label>
+                <input type="password" id="nuevaPass" placeholder="Mínimo 8 caracteres">
+            </div>
+            <div class="form-field">
+                <label>Confirmar contraseña</label>
+                <input type="password" id="confirmarPass" placeholder="Repite la contraseña">
+            </div>
+            <div id="cambioError" class="alert alert-error hidden mt-1"><span>⚠</span><span id="cambioErrorMsg"></span></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-verde" id="btnCambiar">Guardar contraseña</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { login, setSession, redirectByRole, isLoggedIn, getRol } from '../js/auth.js';
+    import { post } from '../js/api.js';
+
+    if (isLoggedIn()) redirectByRole();
+
+    const btnLogin   = document.getElementById('btnLogin');
+    const btnText    = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const alertBox   = document.getElementById('alertBox');
+    const alertMsg   = document.getElementById('alertMsg');
+
+    function showError(msg) {
+        alertBox.classList.remove('hidden');
+        alertMsg.textContent = msg;
+    }
+
+    function hideError() {
+        alertBox.classList.add('hidden');
+    }
+
+    document.getElementById('togglePass').addEventListener('click', () => {
+        const inp = document.getElementById('password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+
+    ['username','password'].forEach(id => {
+        document.getElementById(id).addEventListener('keydown', e => {
+            if (e.key === 'Enter') doLogin();
+        });
+    });
+
+    async function doLogin() {
+        hideError();
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+            showError('Completa todos los campos.');
+            return;
+        }
+
+        btnText.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+        btnLogin.disabled = true;
+
+        try {
+            const data = await login(username, password);
+            setSession(data.token, data.usuario);
+
+            if (data.usuario.debeCambiarClave) {
+                document.getElementById('warningBox').classList.remove('hidden');
+                document.getElementById('modalCambio').classList.remove('hidden');
+                return;
+            }
+
+            redirectByRole();
+
+        } catch (e) {
+            showError(e.message || 'Error al iniciar sesión.');
+        } finally {
+            btnText.classList.remove('hidden');
+            btnSpinner.classList.add('hidden');
+            btnLogin.disabled = false;
+        }
+    }
+
+    btnLogin.addEventListener('click', doLogin);
+
+    document.getElementById('btnCambiar').addEventListener('click', async () => {
+        const nueva = document.getElementById('nuevaPass').value;
+        const confirmar = document.getElementById('confirmarPass').value;
+        const errEl = document.getElementById('cambioError');
+        const msgEl = document.getElementById('cambioErrorMsg');
+
+        if (nueva.length < 8) {
+            errEl.classList.remove('hidden');
+            msgEl.textContent = 'Mínimo 8 caracteres.';
+            return;
+        }
+
+        if (nueva !== confirmar) {
+            errEl.classList.remove('hidden');
+            msgEl.textContent = 'Las contraseñas no coinciden.';
+            return;
+        }
+
+        errEl.classList.add('hidden');
+
+        try {
+            await post('/auth/cambiarClave', {
+                nuevaPassword: nueva
+            });
+
+            document.getElementById('modalCambio').classList.add('hidden');
+            redirectByRole();
+
+        } catch (e) {
+            errEl.classList.remove('hidden');
+            msgEl.textContent = e.message;
+        }
+    });
+
+    document.getElementById('linkRecuperar').addEventListener('click', e => {
+        e.preventDefault();
+        alert('Comunícate con el administrador del sistema para restablecer tu contraseña.');
+    });
+</script>
+</body>
+</html>
