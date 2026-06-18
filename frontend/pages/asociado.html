@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COOVALLUNA — Asociado</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">🌿</div>
+            <div class="brand-text">
+                <strong>COOVALLUNA</strong>
+                <small>Panel Asociado</small>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <button class="nav-item active">
+                🏠 Inicio
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="btn btn-danger">
+                Cerrar sesión
+            </button>
+        </div>
+    </aside>
+
+    <div class="main-area">
+
+        <header class="topbar">
+            <span class="topbar-title">Portal del Asociado</span>
+        </header>
+
+        <main class="page-content">
+
+            <div class="welcome-banner">
+                <div>
+                    <h2>
+                        Bienvenido,
+                        <span id="nombreUsuario"></span>
+                    </h2>
+
+                    <p>
+                        Consulta de información para asociados.
+                    </p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-value">💳</div>
+                    <div class="stat-label">Mis cuentas</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value">📄</div>
+                    <div class="stat-label">Mis créditos</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-value">📊</div>
+                    <div class="stat-label">Mis movimientos</div>
+                </div>
+
+            </div>
+
+            <div class="card" style="margin-top:20px;">
+                <div class="card-header">
+                    <span class="card-title">Información</span>
+                </div>
+
+                <div class="card-body">
+                    <p>
+                        Perfil de asociado cargado correctamente.
+                    </p>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+<script type="module">
+
+    import { getUser, logout } from './js/auth.js';
+
+    const user = getUser();
+
+    if (!user || user.rol !== 'ASOCIADO') {
+        logout();
+    }
+
+    document.getElementById('nombreUsuario').textContent =
+        user.username || 'Asociado';
+
+    window.logout = logout;
+
+</script>
+
+</body>
+</html>
