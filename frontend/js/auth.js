@@ -1,4 +1,4 @@
-const BASE = '/coovalluna/api';
+const BASE = window.location.origin + '/coovalluna/api';
 
 export function getToken() {
     return sessionStorage.getItem('jwt');
@@ -38,14 +38,15 @@ export async function login(username, password) {
 
 export function logout() {
     clearSession();
-    window.location.href = '/coovalluna/pages/login.html';
+    window.location.href = '/coovalluna/login.html';
 }
 
 
 export function redirectByRole() {
     const rol = getRol();
     if (!rol) { logout(); return; }
-    if (rol === 'ADMIN')    window.location.href = '/coovalluna/pages/admin.html';
-    else if (rol === 'ASESOR') window.location.href = '/coovalluna/pages/asesor.html';
-    else if (rol === 'ASOCIADO') window.location.href = '/coovalluna/pages/asociado.html';
+
+    if (rol === 'ADMIN') window.location.href = '/coovalluna/admin.html';
+    else if (rol === 'ASESOR') window.location.href = '/coovalluna/asesor.html';
+    else if (rol === 'ASOCIADO') window.location.href = '/coovalluna/asociado.html';
 }

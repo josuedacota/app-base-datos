@@ -6,10 +6,12 @@ import java.sql.SQLException;
 
 public class DatabaseConfig {
 
-    // Cambiar dependiendo el localhost, usuario y contraseña de la consola que esta trabajando
-    private static final String URL      = "jdbc:postgresql://localhost:5432/coovalluna";
-    private static final String USUARIO  = "postgres";
-    private static final String PASSWORD = "password";
+    // Leer configuración desde variables de entorno con valores por defecto.
+    // Esto facilita cambiar credenciales sin tocar el código.
+    private static final String URL = System.getenv().getOrDefault("DB_URL", "jdbc:postgresql://localhost:5432/coovalluna");
+    private static final String USUARIO = System.getenv().getOrDefault("DB_USER", "postgres");
+    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "1025");
+
     private DatabaseConfig() {}
 
     public static Connection getConnection() throws SQLException {

@@ -87,7 +87,7 @@
         <url-pattern>/api/reportes/*</url-pattern>
     </servlet-mapping>
 
-    <!-- Bitácora -->
+
     <servlet>
         <servlet-name>BitacoraServlet</servlet-name>
         <servlet-class>com.coovalluna.servlet.BitacoraServlet</servlet-class>
